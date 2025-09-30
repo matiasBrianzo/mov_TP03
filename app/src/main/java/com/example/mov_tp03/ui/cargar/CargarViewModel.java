@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+
 import  static  com.example.mov_tp03.MainActivity.*;
 
 import android.app.Application;
@@ -17,6 +17,7 @@ public class CargarViewModel extends AndroidViewModel {
     private  MutableLiveData<String> MsjError;
     private  MutableLiveData<String> MsjExito;
     private FragmentCargarBinding binding;
+    private  StringBuilder sb;
 
     public CargarViewModel(@NonNull Application application) {
         super(application);
@@ -39,40 +40,68 @@ public class CargarViewModel extends AndroidViewModel {
 
     public void AddProducto(String pCodigo, String pDesc, String pPrec)
     {
-        boolean validar =ValidarDatos(pCodigo,pDesc,pPrec);
+        boolean validar = LogicaValidacion(pCodigo,pDesc,pPrec);
+
        if(validar){
            double pre= Double.parseDouble(pPrec);
            lstProducto.add(new Producto(pCodigo,pDesc,pre));
-           MsjExito.setValue("Carga Correcta");
+           MsjExito.setValue("CARGA EXITOSA!!");
        }
 
     }
-    private boolean ValidarDatos(String pCodigo, String pDesc, String pPrec)
+    private boolean LogicaValidacion(String pCodigo, String pDesc, String pPrec)
     {
        boolean validar= true;
-       StringBuilder sb= new StringBuilder();
-        try{
-           double pre= Double.parseDouble(pPrec);
-           validar= !lstProducto.contains(new Producto(pCodigo,pDesc,pre));
+       sb= new StringBuilder();
 
-        } catch (NumberFormatException e) {
-            sb.append("El valor ingresado para precio es incorrecto");
-
-        }
-        if(!validar){
-            sb.append("Ya existe un CODIGO ingresado");
-            validar=false;
-        }
-        if (pDesc.isBlank())
-        {
-            sb.append("El valor ingresado para DESCRIPCION es incorrecto");
-            validar=false;
-        }
-        if(!validar){
+        if(ValidoCampos(pCodigo,pDesc,pPrec)){
             MsjError.setValue(sb.toString());
+            return false;
+        }
+        if (validoDuplicado(pCodigo,pDesc,pPrec))
+        {
+            MsjError.setValue(sb.toString());
+           return false;
         }
 
         return validar;
+    }
 
+    private boolean ValidoCampos(String pCodigo, String pDesc, String pPrec) {
+        boolean validar=false;
+
+        if (pCodigo.isBlank())
+        {
+            sb.append("- CODIGO: Valor erróneo. ");
+            validar=true;
+        }
+        if (pDesc.isBlank())
+        {
+            sb.append("- DESCRIPCIÓN: Valor erróneo. ");
+            validar=true;
+        }
+        if (pPrec.isBlank())
+        {
+            sb.append("- PRECIO: Valor erróneo. ");
+            validar=true;
+        }
+        return validar;
+    }
+
+    private boolean validoDuplicado(String pCodigo, String pDesc, String pPrec) {
+        boolean validar=false;
+        try{
+            double pre= Double.parseDouble(pPrec);
+            validar= lstProducto.contains(new Producto(pCodigo,pDesc,pre));
+
+        } catch (NumberFormatException e) {
+            sb.append("Solo se permiten números en este campo");
+            return true;
+        }
+        if(validar){
+            sb.append("CÓDIGO duplicado");
+            return true;
+        }
+        return validar;
     }
 }

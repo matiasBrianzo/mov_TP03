@@ -8,6 +8,7 @@ import  static com.example.mov_tp03.MainActivity.*;
 import com.example.mov_tp03.Modelo.Producto;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class ListarViewModel extends ViewModel {
 
@@ -23,6 +24,12 @@ public class ListarViewModel extends ViewModel {
 
     public void CargarLista()
     {
+        lstProducto.sort(new Comparator<Producto>() {
+            @Override
+            public int compare(Producto p1, Producto p2) {
+                return p1.getDescricion().compareToIgnoreCase(p2.getDescricion());
+            }
+        });
         mLista.setValue(lstProducto);
     }
 }

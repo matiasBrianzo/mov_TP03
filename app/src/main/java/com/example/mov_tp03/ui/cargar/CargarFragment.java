@@ -24,10 +24,11 @@ public class CargarFragment extends Fragment {
 
         binding = FragmentCargarBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        binding.tvError.setText("");
+
      cargarViewModel.getMsjError().observe(getViewLifecycleOwner(), new Observer<String>() {
      @Override
      public void onChanged(String s) {
+
          binding.tvError.setText(s);
      }
       });
@@ -42,6 +43,7 @@ public class CargarFragment extends Fragment {
         binding.btCargar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                binding.tvError.setText("");
                 cargarViewModel.AddProducto(binding.etCodigo.getText().toString(),
                                             binding.etDescricion.getText().toString(),
                                             binding.etPrecio.getText().toString());
