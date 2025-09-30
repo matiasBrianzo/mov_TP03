@@ -22,13 +22,6 @@ public class ListarAdapter extends RecyclerView.Adapter<ListarAdapter.ViewHolder
     private LayoutInflater inflater;
     private Context context;
     public ListarAdapter(Context context, List<Producto> lstProducto, LayoutInflater inflater) {
-        lstProducto.sort(new Comparator<Producto>() {
-            @Override
-            public int compare(Producto p1, Producto p2) {
-                return p1.getDescricion().compareToIgnoreCase(p2.getDescricion());
-            }
-        });
-
         this.context = context;
         this.LstProducto = lstProducto;
         this.inflater = inflater;
@@ -48,7 +41,7 @@ public class ListarAdapter extends RecyclerView.Adapter<ListarAdapter.ViewHolder
         holder.descripcion.setText(proActual.getDescricion());
 
         double pre= proActual.getPrecio();
-        String str = (""+pre);
+        String str = ("$"+pre);
         holder.precio.setText(str);
     }
 
